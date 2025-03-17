@@ -33,7 +33,7 @@ func ToJPNumber(num int) (string, error) {
 		if unitIndex >= 4 && num > 0 {
 			for j := 0; num > 0; j++ {
 				jpNumber = append([]string{kanjiUnits[unitIndex]}, jpNumber...)
-				isAppended := false
+				hasAppended := false
 
 				// 4桁ごとに処理
 				for subUnitIndex := range []int{0, 1, 2, 3} {
@@ -41,11 +41,13 @@ func ToJPNumber(num int) (string, error) {
 						break
 					}
 
-					jpNumber, isAppended = appendDigitKanji(num, subUnitIndex, jpNumber)
+					var appended bool
+					jpNumber, appended = appendDigitKanji(num, subUnitIndex, jpNumber)
 					num /= 10
+					hasAppended = hasAppended || appended
 				}
 
-				if jpNumber[len(jpNumber)-1] == kanjiUnits[unitIndex] && !isAppended {
+				if jpNumber[len(jpNumber)-1] == kanjiUnits[unitIndex] && !hasAppended {
 					jpNumber = jpNumber[:len(jpNumber)-1]
 				}
 
